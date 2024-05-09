@@ -17,7 +17,7 @@ To run the game, make sure you have Python installed on your system. Clone this 
 
 ```bash
 python pong.py
-
+```
 
 ## Controls
 - **Player 1**: Up - `w`, Down - `s`
