@@ -17,11 +17,11 @@ To run the game, make sure you have Python installed on your system. Clone this 
 
 ```bash
 python pong.py
-```
+
 
 ## Controls
-- Player 1: Up - `w`, Down - `s`
-- Player 2: Up - `Up Arrow`, Down - `Down Arrow`
+- **Player 1**: Up - `w`, Down - `s`
+- **Player 2**: Up - `Up Arrow`, Down - `Down Arrow`
 
 ## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
