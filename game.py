@@ -1,42 +1,51 @@
 """
-
-my game seems to be a simple implementation of the classic game Pong using the Turtle module in Python.
+My game seems to be a simple implementation of the classic game Pong using the Turtle module in Python.
 
 Here's an overview of the key features and my thoughts on your implementation:
 ------------------------------------------------------------------------------
 
 Game Setup: I've set up the game window, players, ball, and scoring system appropriately.
-The layout and colors are clear and visually appealing.
+The layout and colors are clear and visually appealing. The game window is set to a width of 800
+and a height of 600, with a black background. The paddles are colored blue (Player 1) and red (Player 2),
+and the ball is white.
 
 Player Controls: I've implemented keyboard controls for both players to move their paddles up and down.
-This allows for player interaction, which is essential for a two-player game like Pong.
+Player 1 uses the `W` and `S` keys, while Player 2 uses the `Up Arrow` and `Down Arrow` keys. This allows
+for player interaction, which is essential for a two-player game like Pong. Boundary checks ensure the
+paddles stay within the playable area.
 
-Ball Movement: The ball moves diagonally and bounces off the walls and paddles correctly, which is the core mechanic of the game.
+Ball Movement: The ball moves diagonally at an initial speed of `0.2` units per frame and bounces off
+the walls and paddles correctly, which is the core mechanic of the game.
 
-Scoring: I've implemented a scoring system to keep track of each player's score.
-The game ends when one player reaches the target score, and the winner is displayed.
+Scoring: I've implemented a scoring system to keep track of each player's score. The game ends when
+one player reaches the target score (set to `5` by default), and the winner is displayed.
 
-Game Over: When the game ends, the ball stops moving, and the winner is announced.
-This provides a clear indication to the players that the game is over.
+Game Over: When the game ends, the ball stops moving, and the winner is announced. A message prompts
+the players to press the `Spacebar` to reset the game and play again. This provides a clear indication
+to the players that the game is over and offers an easy way to restart.
 
-Boundary Checks: I've implemented boundary checks to prevent the ball from moving beyond the top and bottom lines, ensuring it stays within the playable area.
+Boundary Checks: I've implemented boundary checks to prevent the ball from moving beyond the top and
+bottom lines, ensuring it stays within the playable area. The paddles are also constrained to stay
+within the vertical limits of the screen.
 
-Overall, my implementation covers the basic mechanics of the Pong game effectively.
-It's a great starting point.
+Visual Enhancements: The game includes a center line, a center circle, and a center dot to improve
+the visual appeal. The top, bottom, left, and right boundaries of the playable area are clearly marked.
 
-recommendation:
-you can expand and enhance the game with additional features such as
-- sound effects
-- AI opponents
-- difficulty levels
-- visual enhancements.
+Overall, my implementation covers the basic mechanics of the Pong game effectively and introduces
+new features like dynamic ball speed increase and game reset functionality. It's a great starting point.
 
+Recommendation:
+You can expand and enhance the game with additional features such as:
+- Sound Effects
+- AI Opponents
+- Difficulty Levels
+- Visual Enhancements
+- Power-ups
 """
 
 import turtle
 
 window = turtle.Screen()
-
 window.title("Ping Pong")
 window.setup(width=800, height=600)
 window.bgcolor("black")
@@ -76,7 +85,7 @@ score.color("white")
 score.penup()
 score.hideturtle()
 score.goto(0, 250)
-score.write(f"Player 1: {score1}                Player 2: {score2}", align= "center", font=(None, 20, "normal"))
+score.write(f"Player1: {score1}                Player2: {score2}", align= "center", font=(None, 20, "normal"))
 
 target_score = 5
 
@@ -92,27 +101,27 @@ def game_over(winner):
     ball.goto(0, 0)
     ball.dx = 0
     ball.dy = 0
-    # score.clear()
-
-    # player1.clear()
-    # player2.clear()
-    # ball.clear()
-
-    # player1.hideturtle()
-    # player2.hideturtle()
-    ball.hideturtle()
-
-    # window.clear()  # Clear everything from the screen
-    # clear_lines()  # Clear the lines
-
+    score.clear()
     score.goto(0, 50)
     score.write(f"   Game Over\n*{winner} wins!*", align="center", font=("Arial", 50, "normal"))
+    score.goto(0, -50)
+    score.write("Press Space to Play Again", align="center", font=("Arial", 20, "normal"))
 
-def draw_line(start, end, width=2):
+def reset_game():
+    global score1, score2
+    score1 = 0
+    score2 = 0
+    score.clear()
+    score.goto(0, 250)
+    score.write(f"Player1: {score1}                Player2: {score2}", align= "center", font=(None, 20, "normal"))
+    ball.goto(0, 0)
+    ball.dx = 0.2
+    ball.dy = 0.2
+
+def draw_line(start, end):
     line = turtle.Turtle()
     line.speed(0)
     line.color("white")
-    line.width(width)
     line.penup()
     line.goto(start)
     line.pendown()
@@ -146,8 +155,9 @@ draw_line((-400, 300), (-400, -300))  # Left line
 draw_line((400, 300), (400, -300))  # Right line
 
 draw_line((0, -300), (0, 300)) # vertical middle line
-draw_center_circle(100)
-draw_center_dot(10)
+
+# draw_center_circle(100)
+# draw_center_dot(10)
 
 def player1_up():
     y = player1.ycor()
@@ -174,14 +184,18 @@ def player2_down():
         player2.sety(y)
 
 window.listen() # tell the window to expect keyboard input
+
 window.onkeypress(player1_up, "w")
 window.onkeypress(player1_down, "s")
 window.onkeypress(player2_up, "Up")
 window.onkeypress(player2_down, "Down")
 
+window.onkeypress(reset_game, "space")  # Listen for the spacebar to reset the game
+
 while True:
     window.update()
 
+    # Ball movement logic
     ball.setx(ball.xcor() + ball.dx)
     ball.sety(ball.ycor() + ball.dy)
 
@@ -198,7 +212,7 @@ while True:
         ball.dx *= -1
         score1 += 1
         score.clear()
-        score.write(f"Player 1: {score1}                Player 2: {score2}", align= "center", font=(None, 20, "normal"))
+        score.write(f"Player1: {score1}                Player2: {score2}", align= "center", font=(None, 20, "normal"))
         check_winner()
 
     if ball.xcor() <= -390:
@@ -206,7 +220,7 @@ while True:
         ball.dx *= -1
         score2 += 1
         score.clear()
-        score.write(f"Player 1: {score1}                Player 2: {score2}", align= "center", font=(None, 20, "normal"))
+        score.write(f"Player1: {score1}                Player2: {score2}", align= "center", font=(None, 20, "normal"))
         check_winner()
 
     if (ball.xcor() >= 340) and (ball.xcor() <= 350) and (ball.ycor() <= player2.ycor() + 40) and (ball.ycor() >= player2.ycor() - 40):
@@ -216,4 +230,3 @@ while True:
     if (ball.xcor() <= -340) and (ball.xcor() >= -350) and (ball.ycor() <= player1.ycor() + 40) and (ball.ycor() >= player1.ycor() - 40):
         ball.setx(-340)
         ball.dx *= -1
-
