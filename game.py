@@ -22,6 +22,7 @@ menu_text = None
 difficulty_text = None
 difficulty = "medium"
 paused = False
+countdown_text = None
 
 # Initialize paddles and ball
 player1 = turtle.Turtle()
@@ -168,9 +169,36 @@ def clear_difficulty_menu():
         difficulty_text.clear()
         difficulty_text = None
 
+# Function to display a countdown before starting the game
+def countdown():
+    global countdown_text
+
+    countdown_text = turtle.Turtle()
+    countdown_text.speed(0)
+    countdown_text.color("white")
+    countdown_text.penup()
+    countdown_text.hideturtle()
+    countdown_text.goto(0, 0)
+
+    for i in range(3, 0, -1):
+        countdown_text.clear()
+        countdown_text.write(f"{i}", align="center", font=("Arial", 100, "normal"))
+        window.update()
+        time.sleep(1)
+
+    countdown_text.clear()
+    countdown_text.write("GO!", align="center", font=("Arial", 100, "normal"))
+    window.update()
+    time.sleep(0.5)
+    countdown_text.clear()
+    window.update()
+
 # Function to initialize the game
 def start_game():
     global start_time, ball
+
+    # Display countdown before starting the game
+    countdown()
 
     start_time = time.time()
     ball.dx = initial_speed
