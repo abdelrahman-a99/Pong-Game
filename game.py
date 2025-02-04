@@ -42,6 +42,37 @@ score.hideturtle()
 score.goto(0, 250)
 score.write(f"Player1: {score1}                Player2: {score2}", align= "center", font=(None, 20, "normal"))
 
+target_score = 5
+
+def check_winner():
+    if score1 >= target_score or score2 >= target_score:
+        if score1 > score2:
+            winner = "Player 1"
+        else:
+            winner = "Player 2"
+        game_over(winner)
+
+def game_over(winner):
+    ball.goto(0, 0)
+    ball.dx = 0
+    ball.dy = 0
+    score.clear()
+    score.goto(0, 50)
+    score.write(f"   Game Over\n*{winner} wins!*", align="center", font=("Arial", 50, "normal"))
+    score.goto(0, -50)
+    score.write("Press Space to Play Again", align="center", font=("Arial", 20, "normal"))
+
+def reset_game():
+    global score1, score2
+    score1 = 0
+    score2 = 0
+    score.clear()
+    score.goto(0, 250)
+    score.write(f"Player1: {score1}                Player2: {score2}", align= "center", font=(None, 20, "normal"))
+    ball.goto(0, 0)
+    ball.dx = 0.2
+    ball.dy = 0.2
+
 def draw_line(start, end):
     line = turtle.Turtle()
     line.speed(0)
@@ -85,23 +116,27 @@ draw_line((0, -300), (0, 300)) # vertical middle line
 
 def player1_up():
     y = player1.ycor()
-    y += 20
-    player1.sety(y)
+    if y < 240:  # Adjusted boundary to the top line
+        y += 20
+        player1.sety(y)
 
 def player1_down():
     y = player1.ycor()
-    y -= 20
-    player1.sety(y)
+    if y > -240:  # Adjusted boundary to the bottom line
+        y -= 20
+        player1.sety(y)
 
 def player2_up():
     y = player2.ycor()
-    y += 20
-    player2.sety(y)
+    if y < 240:  # Adjusted boundary to the top line
+        y += 20
+        player2.sety(y)
 
 def player2_down():
     y = player2.ycor()
-    y -= 20
-    player2.sety(y)
+    if y > -240:  # Adjusted boundary to the bottom line
+        y -= 20
+        player2.sety(y)
 
 window.listen() # tell the window to expect keyboard input
 
@@ -109,6 +144,8 @@ window.onkeypress(player1_up, "w")
 window.onkeypress(player1_down, "s")
 window.onkeypress(player2_up, "Up")
 window.onkeypress(player2_down, "Down")
+
+window.onkeypress(reset_game, "space")  # Listen for the spacebar to reset the game
 
 while True:
     window.update()
@@ -130,6 +167,7 @@ while True:
         score1 += 1
         score.clear()
         score.write(f"Player1: {score1}                Player2: {score2}", align= "center", font=(None, 20, "normal"))
+        check_winner()
 
     if ball.xcor() <= -390:
         ball.goto(0, 0)
@@ -137,6 +175,7 @@ while True:
         score2 += 1
         score.clear()
         score.write(f"Player1: {score1}                Player2: {score2}", align= "center", font=(None, 20, "normal"))
+        check_winner()
 
     if (ball.xcor() >= 340) and (ball.xcor() <= 350) and (ball.ycor() <= player2.ycor() + 40) and (ball.ycor() >= player2.ycor() - 40):
         ball.setx(340)
