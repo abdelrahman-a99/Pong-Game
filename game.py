@@ -21,6 +21,7 @@ game_mode = None
 menu_text = None
 difficulty_text = None
 difficulty = "medium"
+paused = False
 
 # Initialize paddles and ball
 player1 = turtle.Turtle()
@@ -250,6 +251,18 @@ def ai_move():
         elif ball.ycor() < player2.ycor() - 10:
             player2_down()
 
+# Function to toggle pause state
+def toggle_pause():
+    global paused
+    paused = not paused
+    if paused:
+        score.goto(0, 0)
+        score.write("PAUSED", align="center", font=("Arial", 50, "normal"))
+    else:
+        score.clear()
+        score.goto(0, 250)
+        score.write(f"Player1: {score1}                Player2: {score2}", align="center", font=(None, 20, "normal"))
+
 # Keyboard bindings
 window.listen()
 window.onkeypress(player1_up, "w")
@@ -259,6 +272,7 @@ window.onkeypress(player2_down, "Down")
 window.onkeypress(reset_game, "space")
 window.onkeypress(start_single_player, "1")
 window.onkeypress(start_multiplayer, "2")
+window.onkeypress(toggle_pause, "p")  # Bind "P" key to toggle pause
 
 # Bind difficulty selection keys only after the difficulty menu is shown
 def bind_difficulty_keys():
@@ -272,49 +286,50 @@ def main_game_loop():
     while True:
         window.update()
 
-        # AI movement
-        ai_move()
+        if not paused:  # Skip game logic if paused
+            # AI movement
+            ai_move()
 
-        # Check the elapsed time and increase speed
-        elapsed_time = time.time() - start_time
-        if elapsed_time >= speed_increase_interval and not game_over_flag:
-            ball.dx = round(ball.dx + speed_increase_factor * (1 if ball.dx > 0 else -1), 2)
-            ball.dy = round(ball.dy + speed_increase_factor * (1 if ball.dy > 0 else -1), 2)
-            start_time = time.time()
+            # Check the elapsed time and increase speed
+            elapsed_time = time.time() - start_time
+            if elapsed_time >= speed_increase_interval and not game_over_flag:
+                ball.dx = round(ball.dx + speed_increase_factor * (1 if ball.dx > 0 else -1), 2)
+                ball.dy = round(ball.dy + speed_increase_factor * (1 if ball.dy > 0 else -1), 2)
+                start_time = time.time()
 
-        # Ball movement logic
-        ball.setx(ball.xcor() + ball.dx)
-        ball.sety(ball.ycor() + ball.dy)
+            # Ball movement logic
+            ball.setx(ball.xcor() + ball.dx)
+            ball.sety(ball.ycor() + ball.dy)
 
-        # Ball collision with top and bottom walls
-        if ball.ycor() >= 290 or ball.ycor() <= -290:
-            ball.dy *= -1
+            # Ball collision with top and bottom walls
+            if ball.ycor() >= 290 or ball.ycor() <= -290:
+                ball.dy *= -1
 
-        # Ball collision with left and right walls (scoring)
-        if ball.xcor() >= 390:
-            ball.goto(0, 0)
-            ball.dx *= -1
-            score1 += 1
-            score.clear()
-            score.write(f"Player1: {score1}                Player2: {score2}", align="center", font=(None, 20, "normal"))
-            check_winner()
+            # Ball collision with left and right walls (scoring)
+            if ball.xcor() >= 390:
+                ball.goto(0, 0)
+                ball.dx *= -1
+                score1 += 1
+                score.clear()
+                score.write(f"Player1: {score1}                Player2: {score2}", align="center", font=(None, 20, "normal"))
+                check_winner()
 
-        if ball.xcor() <= -390:
-            ball.goto(0, 0)
-            ball.dx *= -1
-            score2 += 1
-            score.clear()
-            score.write(f"Player1: {score1}                Player2: {score2}", align="center", font=(None, 20, "normal"))
-            check_winner()
+            if ball.xcor() <= -390:
+                ball.goto(0, 0)
+                ball.dx *= -1
+                score2 += 1
+                score.clear()
+                score.write(f"Player1: {score1}                Player2: {score2}", align="center", font=(None, 20, "normal"))
+                check_winner()
 
-        # Ball collision with paddles
-        if (ball.xcor() >= 340 and ball.xcor() <= 350) and (ball.ycor() <= player2.ycor() + 40 and ball.ycor() >= player2.ycor() - 40):
-            ball.setx(340)
-            ball.dx *= -1
+            # Ball collision with paddles
+            if (ball.xcor() >= 340 and ball.xcor() <= 350) and (ball.ycor() <= player2.ycor() + 40 and ball.ycor() >= player2.ycor() - 40):
+                ball.setx(340)
+                ball.dx *= -1
 
-        if (ball.xcor() <= -340 and ball.xcor() >= -350) and (ball.ycor() <= player1.ycor() + 40 and ball.ycor() >= player1.ycor() - 40):
-            ball.setx(-340)
-            ball.dx *= -1
+            if (ball.xcor() <= -340 and ball.xcor() >= -350) and (ball.ycor() <= player1.ycor() + 40 and ball.ycor() >= player1.ycor() - 40):
+                ball.setx(-340)
+                ball.dx *= -1
 
 # Show the start menu initially
 show_start_menu()
