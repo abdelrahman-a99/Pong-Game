@@ -40,7 +40,48 @@ score.color("white")
 score.penup()
 score.hideturtle()
 score.goto(0, 250)
-score.write(f"Player 1: {score1} Vs Player 2: {score2}", align= "center", font=(None, 20, "normal"))
+score.write(f"Player1: {score1}                Player2: {score2}", align= "center", font=(None, 20, "normal"))
+
+def draw_line(start, end):
+    line = turtle.Turtle()
+    line.speed(0)
+    line.color("white")
+    line.penup()
+    line.goto(start)
+    line.pendown()
+    line.goto(end)
+    line.hideturtle()
+
+def draw_center_circle(size, width=2):
+    circle = turtle.Turtle()
+    circle.speed(0)
+    circle.color("white")
+    circle.width(width)
+    circle.penup()
+    circle.goto(0, -(size))
+    circle.pendown()
+    circle.circle(size)
+    circle.hideturtle()
+
+def draw_center_dot(size):
+    dot = turtle.Turtle()
+    dot.speed(0)
+    dot.color("white")
+    dot.penup()
+    dot.goto(0, 0)
+    dot.pendown()
+    dot.dot(size)
+    dot.hideturtle()
+
+draw_line((-400, 300), (400, 300))  # Top line
+draw_line((-400, -300), (400, -300))  # Bottom line
+draw_line((-400, 300), (-400, -300))  # Left line
+draw_line((400, 300), (400, -300))  # Right line
+
+draw_line((0, -300), (0, 300)) # vertical middle line
+
+# draw_center_circle(100)
+# draw_center_dot(10)
 
 def player1_up():
     y = player1.ycor()
@@ -88,14 +129,14 @@ while True:
         ball.dx *= -1
         score1 += 1
         score.clear()
-        score.write(f"Player 1: {score1} Vs Player 2: {score2}", align= "center", font=(None, 20, "normal"))
+        score.write(f"Player1: {score1}                Player2: {score2}", align= "center", font=(None, 20, "normal"))
 
     if ball.xcor() <= -390:
         ball.goto(0, 0)
         ball.dx *= -1
         score2 += 1
         score.clear()
-        score.write(f"Player 1: {score1} Vs Player 2: {score2}", align= "center", font=(None, 20, "normal"))
+        score.write(f"Player1: {score1}                Player2: {score2}", align= "center", font=(None, 20, "normal"))
 
     if (ball.xcor() >= 340) and (ball.xcor() <= 350) and (ball.ycor() <= player2.ycor() + 40) and (ball.ycor() >= player2.ycor() - 40):
         ball.setx(340)
