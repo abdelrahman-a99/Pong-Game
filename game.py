@@ -6,19 +6,21 @@ window = turtle.Screen()
 window.title("Ping Pong")
 window.setup(width=800, height=600)
 window.bgcolor("black")
-window.tracer(0)  # to stop the widow from updating automatically and update it manually
+window.tracer(0)
 
 # Global variables
 game_over_flag = False
 start_time = time.time()
 initial_speed = 0.2
-speed_increase_interval = 5  # Increase speed every 5 seconds
-speed_increase_factor = 0.02  # Speed increase factor
+speed_increase_interval = 5
+speed_increase_factor = 0.02
 score1 = 0
 score2 = 0
 target_score = 5
-game_mode = None  # Will be set to "single" or "multi" based on player choice
-menu_text = None  # To store the start menu text
+game_mode = None
+menu_text = None
+difficulty_text = None
+difficulty = "medium"
 
 # Initialize paddles and ball
 player1 = turtle.Turtle()
@@ -26,7 +28,7 @@ player1.speed(0)
 player1.shape("square")
 player1.color("blue")
 player1.shapesize(stretch_wid=5, stretch_len=1)
-player1.penup() # stop the object from drawing lines
+player1.penup()
 player1.goto(-350, 0)
 
 player2 = turtle.Turtle()
@@ -34,14 +36,14 @@ player2.speed(0)
 player2.shape("square")
 player2.color("red")
 player2.shapesize(stretch_wid=5, stretch_len=1)
-player2.penup() # stop the object from drawing lines
+player2.penup()
 player2.goto(350, 0)
 
 ball = turtle.Turtle()
 ball.speed(0)
 ball.shape("circle")
 ball.color("white")
-ball.penup() # stop the object from drawing lines
+ball.penup()
 ball.goto(0, 0)
 ball.dx = initial_speed
 ball.dy = initial_speed
@@ -93,34 +95,86 @@ def show_start_menu():
 # Function to clear the start menu text
 def clear_start_menu():
     global menu_text
-    if menu_text:  # Check if menu_text exists
-        menu_text.clear()  # Clear the start menu text
-        menu_text = None  # Reset the menu_text variable
+    if menu_text:
+        menu_text.clear()
+        menu_text = None
 
 # Function to start the game in single-player mode
 def start_single_player():
     global game_mode
     game_mode = "single"
 
-    # window.clear()
-    clear_start_menu()  # Clear the start menu text
+    clear_start_menu()
 
-    start_game()
+    show_difficulty_menu()
+    bind_difficulty_keys()
 
 # Function to start the game in multiplayer mode
 def start_multiplayer():
     global game_mode
     game_mode = "multi"
 
-    # window.clear()
-    clear_start_menu()  # Clear the start menu text
+    clear_start_menu()
 
     start_game()
 
+# Function to show difficulty menu
+def show_difficulty_menu():
+    global difficulty_text
+
+    difficulty_text = turtle.Turtle()
+    difficulty_text.speed(0)
+    difficulty_text.color("white")
+    difficulty_text.penup()
+    difficulty_text.hideturtle()
+    difficulty_text.goto(0, 100)
+    difficulty_text.write("Select Difficulty", align="center", font=("Arial", 30, "normal"))
+    difficulty_text.goto(0, 0)
+    difficulty_text.write("1. Easy", align="center", font=("Arial", 20, "normal"))
+    difficulty_text.goto(0, -50)
+    difficulty_text.write("2. Medium", align="center", font=("Arial", 20, "normal"))
+    difficulty_text.goto(0, -100)
+    difficulty_text.write("3. Hard", align="center", font=("Arial", 20, "normal"))
+    difficulty_text.goto(0, -200)
+    difficulty_text.write("Press 1, 2, or 3 to select", align="center", font=("Arial", 15, "normal"))
+
+# Function to set difficulty level
+def set_difficulty(level):
+    global difficulty, initial_speed, speed_increase_factor
+
+    difficulty = level
+
+    if difficulty == "easy":
+        initial_speed = 0.15
+        speed_increase_factor = 0.01
+
+    elif difficulty == "medium":
+        initial_speed = 0.2
+        speed_increase_factor = 0.02
+
+    elif difficulty == "hard":
+        initial_speed = 0.25
+        speed_increase_factor = 0.03
+
+    clear_difficulty_menu()
+
+    start_game()
+
+# Function to clear the difficulty menu text
+def clear_difficulty_menu():
+    global difficulty_text
+    if difficulty_text:
+        difficulty_text.clear()
+        difficulty_text = None
+
 # Function to initialize the game
 def start_game():
-    global start_time
+    global start_time, ball
+
     start_time = time.time()
+    ball.dx = initial_speed
+    ball.dy = initial_speed
+
     score.clear()
     score.write(f"Player1: {score1}                Player2: {score2}", align="center", font=(None, 20, "normal"))
     main_game_loop()
@@ -190,12 +244,11 @@ def player2_down():
 
 # AI movement function
 def ai_move():
-    if game_mode == "single":  # Only move if in single-player mode
-        if ball.dx > 0:  # Only move when the ball is moving towards the AI
-            if ball.ycor() > player2.ycor() + 10:
-                player2_up()
-            elif ball.ycor() < player2.ycor() - 10:
-                player2_down()
+    if game_mode == "single":
+        if ball.ycor() > player2.ycor() + 10:
+            player2_up()
+        elif ball.ycor() < player2.ycor() - 10:
+            player2_down()
 
 # Keyboard bindings
 window.listen()
@@ -206,6 +259,12 @@ window.onkeypress(player2_down, "Down")
 window.onkeypress(reset_game, "space")
 window.onkeypress(start_single_player, "1")
 window.onkeypress(start_multiplayer, "2")
+
+# Bind difficulty selection keys only after the difficulty menu is shown
+def bind_difficulty_keys():
+    window.onkeypress(lambda: set_difficulty("easy"), "1")
+    window.onkeypress(lambda: set_difficulty("medium"), "2")
+    window.onkeypress(lambda: set_difficulty("hard"), "3")
 
 # Main game loop
 def main_game_loop():
