@@ -18,6 +18,12 @@ This is a simple implementation of the classic game Pong using the Turtle module
 
 - **Visual Enhancements**: The game includes a center line, a center circle, and a center dot to improve the visual appeal. The top, bottom, left, and right boundaries of the playable area are clearly marked.
 
+- **Single-Player Mode with AI**: The game can be played in single-player mode against an AI opponent. The AI controls the red paddle and adjusts its position based on the ball's movement.
+
+- **Difficulty Levels**: Players can select from three difficulty levels (Easy, Medium, Hard) which affect the initial speed of the ball and the rate at which the speed increases.
+
+- **Pause Function**: The game can be paused at any time by pressing the `P` key. This allows players to take a break and resume the game later.
+
 ## Usage
 
 To run the game, make sure you have Python installed on your system. Clone this repository and execute the `game.py` file using Python.
@@ -39,15 +45,27 @@ python game.py
 - **Reset Game**:
   - Press the `Spacebar` to reset the game after a game over.
 
+- **Pause Game**:
+  - Press the `P` key to pause or resume the game.
+
+- **Start Single-Player Mode**:
+  - Press the `1` key to start the game in single-player mode.
+
+- **Start Multiplayer Mode**:
+  - Press the `2` key to start the game in multiplayer mode.
+
+- **Select Difficulty Level**:
+  - Press the `1`, `2`, or `3` keys to select Easy, Medium, or Hard difficulty, respectively.
+
 ## Future Enhancements
 
 Here are some ideas for future enhancements to the game:
 
 - **Sound Effects**: Add sound effects for ball hits, scoring, and game over.
-- **AI Opponents**: Implement an AI opponent for single-player mode.
-- **Difficulty Levels**: Add different difficulty levels to adjust the speed and behavior of the ball.
 - **Power-ups**: Introduce power-ups that can change the ball's speed, paddle size, or other game dynamics.
 - **Visual Enhancements**: Add more visual effects, such as trails behind the ball or animated backgrounds.
+- **Customizable Controls**: Allow players to customize the control keys.
+- **High Score System**: Implement a high score system to track the best scores.
 
 ## License
 
