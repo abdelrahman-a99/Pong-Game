@@ -64,6 +64,9 @@ python game.py
 - **Select Difficulty Level**:
   - Press the `1`, `2`, or `3` keys to select Easy, Medium, or Hard difficulty, respectively.
 
+- **Go Back**:
+  - Press the `Escape` key to go back to the main menu from any submenu.
+
 ## Customization Options
 
 - **Paddle Color**: Choose from a variety of colors for both paddles.
