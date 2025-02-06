@@ -87,6 +87,10 @@ draw_line((0, -300), (0, 300))  # Vertical middle line
 def show_start_menu():
     global menu_text
 
+    # Clear any existing difficulty and customization menu text
+    clear_difficulty_menu()
+    clear_customization_menu()
+
     menu_text = turtle.Turtle()
     menu_text.speed(0)
     menu_text.color("white")
@@ -151,6 +155,16 @@ def show_difficulty_menu():
     difficulty_text.write("3. Hard", align="center", font=("Arial", 20, "normal"))
     difficulty_text.goto(0, -200)
     difficulty_text.write("Press 1, 2, or 3 to select", align="center", font=("Arial", 15, "normal"))
+    difficulty_text.goto(0, -250)
+    difficulty_text.write("Press Esc to go back", align="center", font=("Arial", 15, "normal"))  # Back option
+
+    # Bind Esc key to go back to the main menu
+    window.onkeypress(return_to_main_menu_from_difficulty, "Escape")
+
+# Function to return to the main menu
+def return_to_main_menu_from_difficulty():
+    clear_difficulty_menu()  # Clear difficulty menu text
+    show_start_menu()  # Show the main menu
 
 # Function to set difficulty level
 def set_difficulty(level):
@@ -181,6 +195,9 @@ def clear_difficulty_menu():
         difficulty_text.clear()
         difficulty_text = None
 
+    # Clear Escape key binding
+    window.onkeypress(None, "Escape")
+
 # Function to show customization menu
 def show_customization_menu():
     global customization_text
@@ -204,9 +221,19 @@ def show_customization_menu():
     customization_text.write("4. Game Speed", align="center", font=("Arial", 20, "normal"))
     customization_text.goto(0, -200)
     customization_text.write("Press 1, 2, 3, or 4 to select", align="center", font=("Arial", 15, "normal"))
+    customization_text.goto(0, -250)
+    customization_text.write("Press Esc to go back", align="center", font=("Arial", 15, "normal"))  # Back option
 
     # Bind customization keys
     bind_customization_keys()
+
+    # Bind Esc key to go back to the main menu
+    window.onkeypress(return_to_main_menu_from_customization, "Escape")
+
+# Function to return to the main menu from customization
+def return_to_main_menu_from_customization():
+    clear_customization_menu()  # Clear customization menu text
+    show_start_menu()  # Show the main menu
 
 # Function to clear the customization menu text
 def clear_customization_menu():
@@ -214,6 +241,9 @@ def clear_customization_menu():
     if customization_text:
         customization_text.clear()
         customization_text = None
+
+    # Clear Escape key binding
+    window.onkeypress(None, "Escape")
 
 # Function to set paddle color
 def set_paddle_color(color):
@@ -242,6 +272,9 @@ def set_game_speed(speed):
     clear_customization_menu()
     show_start_menu()  # Return to the start menu after setting the speed
 
+    # # Return to the customization menu after setting the speed
+    # show_customization_menu()
+
 # Function to handle customization options
 def handle_customization(option):
     clear_customization_menu()
@@ -258,6 +291,9 @@ def handle_customization(option):
 # Function to show color menu
 def show_color_menu(item):
     global customization_text
+
+    # Clear existing key bindings
+    window.onkeypress(None, "Escape")  # Clear Escape binding
 
     customization_text = turtle.Turtle()
     customization_text.speed(0)
@@ -276,13 +312,36 @@ def show_color_menu(item):
     customization_text.goto(0, y - 50)
     customization_text.write("Press a number to select", align="center", font=("Arial", 15, "normal"))
 
+    customization_text.goto(0, y - 100)
+    customization_text.write("Press Esc to go back", align="center", font=("Arial", 15, "normal"))  # Back option
+
     # Bind color selection keys
     for i, color in enumerate(paddle_colors if item == "paddle" else ball_colors if item == "ball" else background_colors):
         window.onkeypress(lambda c=color: set_color(item, c), str(i + 1))
 
+    # Bind Esc key to go back to the customization menu
+    window.onkeypress(return_to_main_menu_from_color_menu, "Escape")
+
+# Function to return to the main menu from customization
+def return_to_main_menu_from_color_menu():
+    clear_color_menu()  # Clear color menu text
+    show_customization_menu()  # Show the main menu
+
+def clear_color_menu():
+    global customization_text
+    if customization_text:
+        customization_text.clear()
+        customization_text = None
+
+    # Clear Escape key binding
+    window.onkeypress(None, "Escape")
+
 # Function to show speed menu
 def show_speed_menu():
     global customization_text
+
+    # Clear existing key bindings
+    window.onkeypress(None, "Escape")  # Clear Escape binding
 
     customization_text = turtle.Turtle()
     customization_text.speed(0)
@@ -301,9 +360,29 @@ def show_speed_menu():
     customization_text.goto(0, y - 50)
     customization_text.write("Press a number to select", align="center", font=("Arial", 15, "normal"))
 
+    customization_text.goto(0, y - 100)
+    customization_text.write("Press Esc to go back", align="center", font=("Arial", 15, "normal"))  # Back option
+
     # Bind speed selection keys
     for i, speed in enumerate(game_speeds):
         window.onkeypress(lambda s=speed: set_game_speed(s), str(i + 1))
+
+    # Bind Esc key to go back to the customization menu
+    window.onkeypress(return_to_main_menu_from_speed_menu, "Escape")
+
+# Function to return to the main menu from customization
+def return_to_main_menu_from_speed_menu():
+    clear_speed_menu()  # Clear speed menu text
+    show_customization_menu()  # Show the main menu
+
+def clear_speed_menu():
+    global customization_text
+    if customization_text:
+        customization_text.clear()
+        customization_text = None
+
+    # Clear Escape key binding
+    window.onkeypress(None, "Escape")
 
 # Function to set color based on item
 def set_color(item, color):
@@ -316,6 +395,9 @@ def set_color(item, color):
 
     clear_customization_menu()
     show_start_menu()
+
+    # # Return to the customization menu after setting the color
+    # show_customization_menu()
 
 # Function to display a countdown before starting the game
 def countdown():
@@ -477,6 +559,7 @@ def reset_main_menu_keys():
     window.onkeypress(None, "1")
     window.onkeypress(None, "2")
     window.onkeypress(None, "3")
+    window.onkeypress(None, "Escape")  # Clear Escape binding
 
     # Bind keys for main menu
     window.onkeypress(start_single_player, "1")
