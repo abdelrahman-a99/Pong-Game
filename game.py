@@ -20,9 +20,16 @@ target_score = 5
 game_mode = None
 menu_text = None
 difficulty_text = None
+customization_text = None
 difficulty = "medium"
 paused = False
 countdown_text = None
+
+# Customization options
+paddle_colors = ["blue", "red", "green", "yellow", "purple", "orange"]
+ball_colors = ["white", "red", "blue", "green", "yellow", "purple"]
+background_colors = ["black", "gray", "lightblue", "lightgreen", "lightyellow", "pink"]
+game_speeds = ["slow", "normal", "fast"]
 
 # Initialize paddles and ball
 player1 = turtle.Turtle()
@@ -91,8 +98,13 @@ def show_start_menu():
     menu_text.write("1. Single Player", align="center", font=("Arial", 30, "normal"))
     menu_text.goto(0, -50)
     menu_text.write("2. Multiplayer", align="center", font=("Arial", 30, "normal"))
+    menu_text.goto(0, -100)
+    menu_text.write("3. Customization", align="center", font=("Arial", 30, "normal"))
     menu_text.goto(0, -150)
-    menu_text.write("Press 1 or 2 to start", align="center", font=("Arial", 20, "normal"))
+    menu_text.write("Press 1, 2, or 3 to start", align="center", font=("Arial", 20, "normal"))
+
+    # Reset main menu key bindings
+    reset_main_menu_keys()
 
 # Function to clear the start menu text
 def clear_start_menu():
@@ -168,6 +180,142 @@ def clear_difficulty_menu():
     if difficulty_text:
         difficulty_text.clear()
         difficulty_text = None
+
+# Function to show customization menu
+def show_customization_menu():
+    global customization_text
+
+    clear_start_menu()
+
+    customization_text = turtle.Turtle()
+    customization_text.speed(0)
+    customization_text.color("white")
+    customization_text.penup()
+    customization_text.hideturtle()
+    customization_text.goto(0, 100)
+    customization_text.write("Customization", align="center", font=("Arial", 30, "normal"))
+    customization_text.goto(0, 0)
+    customization_text.write("1. Paddle Color", align="center", font=("Arial", 20, "normal"))
+    customization_text.goto(0, -50)
+    customization_text.write("2. Ball Color", align="center", font=("Arial", 20, "normal"))
+    customization_text.goto(0, -100)
+    customization_text.write("3. Background Color", align="center", font=("Arial", 20, "normal"))
+    customization_text.goto(0, -150)
+    customization_text.write("4. Game Speed", align="center", font=("Arial", 20, "normal"))
+    customization_text.goto(0, -200)
+    customization_text.write("Press 1, 2, 3, or 4 to select", align="center", font=("Arial", 15, "normal"))
+
+    # Bind customization keys
+    bind_customization_keys()
+
+# Function to clear the customization menu text
+def clear_customization_menu():
+    global customization_text
+    if customization_text:
+        customization_text.clear()
+        customization_text = None
+
+# Function to set paddle color
+def set_paddle_color(color):
+    player1.color(color)
+    player2.color(color)
+
+# Function to set ball color
+def set_ball_color(color):
+    ball.color(color)
+
+# Function to set background color
+def set_background_color(color):
+    window.bgcolor(color)
+
+# Function to set game speed
+def set_game_speed(speed):
+    global initial_speed
+
+    if speed == "slow":
+        initial_speed = 0.1
+    elif speed == "normal":
+        initial_speed = 0.2
+    elif speed == "fast":
+        initial_speed = 0.3
+
+    clear_customization_menu()
+    show_start_menu()  # Return to the start menu after setting the speed
+
+# Function to handle customization options
+def handle_customization(option):
+    clear_customization_menu()
+
+    if option == 1:  # Paddle color
+        show_color_menu("paddle")
+    elif option == 2:  # Ball color
+        show_color_menu("ball")
+    elif option == 3:  # Background color
+        show_color_menu("background")
+    elif option == 4:  # Game speed
+        show_speed_menu()
+
+# Function to show color menu
+def show_color_menu(item):
+    global customization_text
+
+    customization_text = turtle.Turtle()
+    customization_text.speed(0)
+    customization_text.color("white")
+    customization_text.penup()
+    customization_text.hideturtle()
+    customization_text.goto(0, 100)
+    customization_text.write(f"Select {item.capitalize()} Color", align="center", font=("Arial", 30, "normal"))
+
+    y = 0
+    for i, color in enumerate(paddle_colors if item == "paddle" else ball_colors if item == "ball" else background_colors):
+        customization_text.goto(0, y)
+        customization_text.write(f"{i + 1}. {color.capitalize()}", align="center", font=("Arial", 20, "normal"))
+        y -= 50
+
+    customization_text.goto(0, y - 50)
+    customization_text.write("Press a number to select", align="center", font=("Arial", 15, "normal"))
+
+    # Bind color selection keys
+    for i, color in enumerate(paddle_colors if item == "paddle" else ball_colors if item == "ball" else background_colors):
+        window.onkeypress(lambda c=color: set_color(item, c), str(i + 1))
+
+# Function to show speed menu
+def show_speed_menu():
+    global customization_text
+
+    customization_text = turtle.Turtle()
+    customization_text.speed(0)
+    customization_text.color("white")
+    customization_text.penup()
+    customization_text.hideturtle()
+    customization_text.goto(0, 100)
+    customization_text.write("Select Game Speed", align="center", font=("Arial", 30, "normal"))
+
+    y = 0
+    for i, speed in enumerate(game_speeds):
+        customization_text.goto(0, y)
+        customization_text.write(f"{i + 1}. {speed.capitalize()}", align="center", font=("Arial", 20, "normal"))
+        y -= 50
+
+    customization_text.goto(0, y - 50)
+    customization_text.write("Press a number to select", align="center", font=("Arial", 15, "normal"))
+
+    # Bind speed selection keys
+    for i, speed in enumerate(game_speeds):
+        window.onkeypress(lambda s=speed: set_game_speed(s), str(i + 1))
+
+# Function to set color based on item
+def set_color(item, color):
+    if item == "paddle":
+        set_paddle_color(color)
+    elif item == "ball":
+        set_ball_color(color)
+    elif item == "background":
+        set_background_color(color)
+
+    clear_customization_menu()
+    show_start_menu()
 
 # Function to display a countdown before starting the game
 def countdown():
@@ -300,6 +448,7 @@ window.onkeypress(player2_down, "Down")
 window.onkeypress(reset_game, "space")
 window.onkeypress(start_single_player, "1")
 window.onkeypress(start_multiplayer, "2")
+window.onkeypress(lambda: show_customization_menu(), "3")  # Bind "3" to show customization menu
 window.onkeypress(toggle_pause, "p")  # Bind "P" key to toggle pause
 
 # Bind difficulty selection keys only after the difficulty menu is shown
@@ -307,6 +456,32 @@ def bind_difficulty_keys():
     window.onkeypress(lambda: set_difficulty("easy"), "1")
     window.onkeypress(lambda: set_difficulty("medium"), "2")
     window.onkeypress(lambda: set_difficulty("hard"), "3")
+
+# Function to bind customization keys
+def bind_customization_keys():
+    # Clear existing key bindings
+    window.onkeypress(None, "1")
+    window.onkeypress(None, "2")
+    window.onkeypress(None, "3")
+    window.onkeypress(None, "4")
+
+    # Bind keys for paddle color selection
+    window.onkeypress(lambda: handle_customization(1), "1")
+    window.onkeypress(lambda: handle_customization(2), "2")
+    window.onkeypress(lambda: handle_customization(3), "3")
+    window.onkeypress(lambda: handle_customization(4), "4")
+
+# Function to reset main menu key bindings
+def reset_main_menu_keys():
+    # Clear existing key bindings
+    window.onkeypress(None, "1")
+    window.onkeypress(None, "2")
+    window.onkeypress(None, "3")
+
+    # Bind keys for main menu
+    window.onkeypress(start_single_player, "1")
+    window.onkeypress(start_multiplayer, "2")
+    window.onkeypress(lambda: show_customization_menu(), "3")
 
 # Main game loop
 def main_game_loop():
